@@ -1,0 +1,65 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+*.egg-info/
+
+# Django migrations
+**/migrations/**  # Ignore all migration files, but not the migrations folder
+!**/migrations/__init__.py  # Keep __init__.py to ensure the folder is recognized
+
+# Database files
+db.sqlite3
+*.db
+
+# Media and static files
+media/
+staticfiles/
+static/
+
+# Environment variables & secrets
+.env
+*.secret
+
+# Logs and debug files
+logs/
+*.log
+debug.log
+
+# VS Code settings
+.vscode/
+
+# macOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+
+# Python packages
+*.egg
+*.manifest
+*.spec
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Compiled C files
+*.so
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# MyPy & Pylint cache
+.mypy_cache/
+.pylint.d/
