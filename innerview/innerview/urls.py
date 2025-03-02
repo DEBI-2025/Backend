@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from .views import ActivateUserView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -27,6 +28,7 @@ urlpatterns = [
     path('',TemplateView.as_view(template_name='index.html')),
     path('auth/',include('djoser.urls')),
     path('auth/',include('djoser.urls.jwt')),
+    path('activate/<uid>/<token>/', ActivateUserView.as_view(), name='activate-user'),
     # Swagger documentation URLs
     re_path(
         r"^swagger(?P<format>\.json|\.yaml)$",

@@ -13,6 +13,7 @@ class  UserAccountManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
+    
     def create_superuser(self,email,first_name,last_name,date_of_birth,phone,password=None):
         user=self.create_user(email,first_name,last_name,date_of_birth,phone,password)
         user.is_superuser = True
@@ -21,11 +22,20 @@ class  UserAccountManager(BaseUserManager):
         return user
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
+    LEVEL_CHOICES = [
+        ('entry', 'Entry-Level'),
+        ('junior', 'Junior'),
+        ('mid', 'Mid-Level'),
+        ('senior', 'Senior'),
+    ]
+
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=100,unique=True)
     date_of_birth= models.DateField()
     phone = models.CharField(max_length=100)
+    level = models.CharField(max_length=10, choices=LEVEL_CHOICES, default='entry')
+
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
