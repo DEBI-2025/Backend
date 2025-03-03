@@ -43,6 +43,7 @@ DJANGO_APPS = [
 
 INTERNAL_APPS = [
     'accounts',
+    'quiz',
 ]
 
 THIRD_PARTY_APPS = [

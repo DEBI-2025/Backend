@@ -29,6 +29,7 @@ urlpatterns = [
     path('auth/',include('djoser.urls')),
     path('auth/',include('djoser.urls.jwt')),
     path('activate/<uid>/<token>/', ActivateUserView.as_view(), name='activate-user'),
+    path('api/', include('quiz.urls')),
     # Swagger documentation URLs
     re_path(
         r"^swagger(?P<format>\.json|\.yaml)$",
