@@ -22,7 +22,6 @@ staticfiles/
 static/
 
 # Environment variables & secrets
-.env
 *.secret
 
 # Logs and debug files
@@ -31,7 +30,6 @@ logs/
 debug.log
 
 # VS Code settings
-.vscode/
 
 # macOS system files
 .DS_Store
@@ -63,3 +61,5 @@ coverage.xml
 # MyPy & Pylint cache
 .mypy_cache/
 .pylint.d/
+config.bat
+node_modules

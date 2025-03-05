@@ -27,9 +27,6 @@ class TopicListView(generics.ListAPIView):
 # Fetch questions based on selected field, level, and topic
 class QuestionListView(generics.ListAPIView):
     serializer_class = QuestionSerializer
-    
-    #Comment
-    
 
     def get_queryset(self):
         field_id = self.request.query_params.get('field_id')
