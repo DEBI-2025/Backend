@@ -43,6 +43,7 @@ DJANGO_APPS = [
 
 INTERNAL_APPS = [
     'accounts',
+    'quiz',
 ]
 
 THIRD_PARTY_APPS = [
@@ -182,8 +183,10 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=15),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
