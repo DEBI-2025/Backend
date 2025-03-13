@@ -1,6 +1,5 @@
 from rest_framework import generics
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from .models import Field, Level, Topic, Question
 from .serializers import FieldSerializer, LevelSerializer, TopicSerializer, QuestionSerializer
 
@@ -8,15 +7,18 @@ from .serializers import FieldSerializer, LevelSerializer, TopicSerializer, Ques
 class FieldListView(generics.ListAPIView):
     queryset = Field.objects.all()
     serializer_class = FieldSerializer
+    permission_classes = [IsAuthenticated]
 
 # List all available levels
 class LevelListView(generics.ListAPIView):
     queryset = Level.objects.all()
     serializer_class = LevelSerializer
+    permission_classes = [IsAuthenticated]
 
 # List topics based on field selection
 class TopicListView(generics.ListAPIView):
     serializer_class = TopicSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         field_id = self.request.query_params.get('field_id')
@@ -27,6 +29,7 @@ class TopicListView(generics.ListAPIView):
 # Fetch questions based on selected field, level, and topic
 class QuestionListView(generics.ListAPIView):
     serializer_class = QuestionSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         field_id = self.request.query_params.get('field_id')
