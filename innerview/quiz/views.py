@@ -2,7 +2,8 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .models import Field, Level, Topic, Question
 from .serializers import FieldSerializer, LevelSerializer, TopicSerializer, QuestionSerializer
-
+from .geminiAPI import geminiAPI
+import json
 # List all available fields
 class FieldListView(generics.ListAPIView):
     queryset = Field.objects.all()
@@ -32,17 +33,22 @@ class QuestionListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        
         field_id = self.request.query_params.get('field_id')
+        
         topic_id = self.request.query_params.get('topic_id')
         level_id = self.request.query_params.get('level_id')
-
-        queryset = Question.objects.all()
-
-        if field_id:
-            queryset = queryset.filter(field_id=field_id)
-        if topic_id:
-            queryset = queryset.filter(topic_id=topic_id)
-        if level_id:
-            queryset = queryset.filter(level_id=level_id)
+        
+        queryset = Question.objects.filter(field_id=field_id,topic_id=topic_id,level_id=level_id)
+        if (queryset.count() ==0):
+            api_key="AIzaSyDbgILxNKc0RZjgER7LK-SpKVU4X7HFkyI"
+            field=Field.objects.get(id=field_id)
+            level=Level.objects.get(id=level_id)
+            topic=Topic.objects.get(id=topic_id)
+            newQs=geminiAPI(api_key,field.name,level.name,topic.name)['questions']
+            for newQ in newQs:
+                Question.objects.create(text=newQ['text'],answer=newQ['answer'],field_id=field_id,topic_id=topic_id,level_id=level_id)  
+            queryset = Question.objects.filter(field_id=field_id,topic_id=topic_id,level_id=level_id)
+        
 
         return queryset
