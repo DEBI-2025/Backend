@@ -52,7 +52,7 @@ THIRD_PARTY_APPS = [
     'drf_yasg',
 ]
 
-INSTALLED_APPS = DJANGO_APPS + INTERNAL_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = DJANGO_APPS + INTERNAL_APPS + THIRD_PARTY_APPS +['hrquestions']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
