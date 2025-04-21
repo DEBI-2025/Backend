@@ -35,24 +35,25 @@ class QuestionListView(generics.ListAPIView):
 
     def get_queryset(self):
         
-        
-        field_id = self.request.GET.get('field_id')
-        topic_id = self.request.GET.get('topic_id')
-        level_id = self.request.GET.get('level_id')
-        if  (not field_id or not topic_id or not level_id):
-            raise ValidationError({'Error': "Missing field or Topic or level query parameter"})
+        required_params  = ['field', 'topic', 'level']
+        missing = [param for param in required_params if not self.request.GET.get(param)]
+        if missing:
+            raise ValidationError({'error': f"Missing query parameters: {', '.join(missing)}"})
         
         
-        queryset = Question.objects.filter(field_id=field_id,topic_id=topic_id,level_id=level_id)
+        field=Field.objects.get(name=self.request.GET.get('field'))
+        level=Level.objects.get(name=self.request.GET.get('level'))   
+        topic=Topic.objects.get(name=self.request.GET.get('topic'))
+     
+        
+        queryset = Question.objects.filter(field__id=field.pk,topic__id=topic.pk,level__id=level.pk)
         if (queryset.count() ==0):
             api_key="AIzaSyDbgILxNKc0RZjgER7LK-SpKVU4X7HFkyI"
-            field=Field.objects.get(id=field_id)
-            level=Level.objects.get(id=level_id)
-            topic=Topic.objects.get(id=topic_id)
+
             newQs=geminiAPI(api_key,field.name,level.name,topic.name)['questions']
             for newQ in newQs:
-                Question.objects.create(text=newQ['text'],answer=newQ['answer'],field_id=field_id,topic_id=topic_id,level_id=level_id)  
-            queryset = Question.objects.filter(field_id=field_id,topic_id=topic_id,level_id=level_id)
+                Question.objects.create(text=newQ['text'],answer=newQ['answer'],field=field,topic=topic,level=level)  
+            queryset = Question.objects.filter(field_id=field.pk,topic_id=topic.pk,level_id=level.pk)
         
 
         return queryset
