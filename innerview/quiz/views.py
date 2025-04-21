@@ -40,12 +40,10 @@ class QuestionListView(generics.ListAPIView):
         if missing:
             raise ValidationError({'error': f"Missing query parameters: {', '.join(missing)}"})
         
-        
         field=Field.objects.get(name=self.request.GET.get('field'))
         level=Level.objects.get(name=self.request.GET.get('level'))   
         topic=Topic.objects.get(name=self.request.GET.get('topic'))
      
-        
         queryset = Question.objects.filter(field__id=field.pk,topic__id=topic.pk,level__id=level.pk)
         if (queryset.count() ==0):
             api_key="AIzaSyDbgILxNKc0RZjgER7LK-SpKVU4X7HFkyI"
