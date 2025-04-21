@@ -2,6 +2,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .models import Field, Level, Topic, Question
 from .serializers import FieldSerializer, LevelSerializer, TopicSerializer, QuestionSerializer
+from rest_framework.exceptions import ValidationError
 from .geminiAPI import geminiAPI
 import json
 # List all available fields
@@ -34,10 +35,13 @@ class QuestionListView(generics.ListAPIView):
 
     def get_queryset(self):
         
-        field_id = self.request.query_params.get('field_id')
         
-        topic_id = self.request.query_params.get('topic_id')
-        level_id = self.request.query_params.get('level_id')
+        field_id = self.request.GET.get('field_id')
+        topic_id = self.request.GET.get('topic_id')
+        level_id = self.request.GET.get('level_id')
+        if  (not field_id or not topic_id or not level_id):
+            raise ValidationError({'Error': "Missing field or Topic or level query parameter"})
+        
         
         queryset = Question.objects.filter(field_id=field_id,topic_id=topic_id,level_id=level_id)
         if (queryset.count() ==0):
