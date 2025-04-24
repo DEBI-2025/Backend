@@ -50,3 +50,7 @@ class QuizSerializer(serializers.ModelSerializer):
             Choice.objects.create(quiz_question=quiz_question,**choice_data)
         
         return quiz_question
+class ReceivedAnswerSerializer(serializers.Serializer):
+    choices = ChoiceSerializer()
+    #text = serializers.CharField(read_only=True)
+    text = serializers.CharField()

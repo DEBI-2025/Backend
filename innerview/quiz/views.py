@@ -1,8 +1,11 @@
 from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from .models import Field, Level, Topic, Question,Quiz,Choice
-from .serializers import FieldSerializer, LevelSerializer, TopicSerializer, QuestionSerializer,QuizSerializer,ChoiceSerializer
+from .serializers import FieldSerializer, LevelSerializer, TopicSerializer, QuestionSerializer,QuizSerializer,ChoiceSerializer,ReceivedAnswerSerializer
 from rest_framework.exceptions import ValidationError
+from rest_framework.response import Response
+from rest_framework import status
 from .geminiAPI import geminiAPI,quizGeminiAPI
 import json
 # List all available fields
@@ -88,3 +91,35 @@ class QuestionListView(generics.ListAPIView):
         
 
         return queryset
+
+class GetScore(APIView):
+
+    def post(self,request):
+        serializer = ReceivedAnswerSerializer(data=request.data ,many=True)
+        if serializer.is_valid():
+            
+            answers=serializer.validated_data
+            score=0
+            QuestionsNum=len(answers)
+            reponse_data={}
+            reponse_data['answers']=[]
+            for answer in answers:
+                text=answer['text']
+                question=Quiz.objects.get(text=text)
+                user_choice = question.choices.get(label=answer['choices']['label'])
+                if (user_choice.is_correct):
+                    score+=1
+                reponse_data['answers'].append(
+                    {
+                        'text': text,
+                        'staus': "correct" if user_choice.is_correct else "wrong",
+                        'correct_label' : str(question.choices.get(is_correct=True).label),
+                        'correct_choice_text' : str(question.choices.get(is_correct=True).choice_text),
+                        'answer_reason' : str(question.answer_reason),
+                    }
+            )
+            pct=(score/QuestionsNum)*100
+            reponse_data['result'] = "Pased" if  pct > 60 else "Failed"
+            reponse_data['Score']= str(pct) + "%"
+            return Response(reponse_data,status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
