@@ -6,4 +6,5 @@ urlpatterns = [
     path('levels/', LevelListView.as_view(), name='levels'),
     path('topics/', TopicListView.as_view(), name='topics'),
     path('questions/', QuestionListView.as_view(), name='questions'),
+    path('quiz/', QuizListView.as_view(), name='quiz'),
 ]

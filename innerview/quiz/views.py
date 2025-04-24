@@ -1,9 +1,9 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
-from .models import Field, Level, Topic, Question
-from .serializers import FieldSerializer, LevelSerializer, TopicSerializer, QuestionSerializer
+from .models import Field, Level, Topic, Question,Quiz,Choice
+from .serializers import FieldSerializer, LevelSerializer, TopicSerializer, QuestionSerializer,QuizSerializer,ChoiceSerializer
 from rest_framework.exceptions import ValidationError
-from .geminiAPI import geminiAPI
+from .geminiAPI import geminiAPI,quizGeminiAPI
 import json
 # List all available fields
 class FieldListView(generics.ListAPIView):
@@ -28,6 +28,39 @@ class TopicListView(generics.ListAPIView):
             return Topic.objects.filter(field_id=field_id)
         return Topic.objects.all()
 
+class QuizListView(generics.ListAPIView):
+    serializer_class=QuizSerializer
+    # permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        required_params  = ['field', 'topic', 'level']
+        missing = [param for param in required_params if not self.request.GET.get(param)]
+        if missing:
+            raise ValidationError({'error': f"Missing query parameters: {', '.join(missing)}"})
+        try :
+            field=Field.objects.get(name=self.request.GET.get('field'))
+            level=Level.objects.get(name=self.request.GET.get('level'))   
+            topic=Topic.objects.get(name=self.request.GET.get('topic'))
+
+        except (Field.DoesNotExist, Level.DoesNotExist, Topic.DoesNotExist) as e:
+            raise ValidationError({'error': str(e)})
+        
+        queryset = Quiz.objects.filter(field__id=field.pk,topic__id=topic.pk,level__id=level.pk)
+        if not queryset.exists():
+            api_key="AIzaSyDbgILxNKc0RZjgER7LK-SpKVU4X7HFkyI"
+
+            newQs=quizGeminiAPI(api_key,field.name,level.name,topic.name)['questions']
+            for newQ in newQs:
+                newQ['topic']=topic.pk
+                newQ['field']=field.pk
+                newQ['level']=level.pk
+                serializer = QuizSerializer(data=newQ)
+                print(newQ)
+                if serializer.is_valid():
+                    serializer.save() 
+            queryset = Quiz.objects.filter(field_id=field.pk,topic_id=topic.pk,level_id=level.pk)
+        
+        return queryset
 # Fetch questions based on selected field, level, and topic
 class QuestionListView(generics.ListAPIView):
     serializer_class = QuestionSerializer
