@@ -110,7 +110,7 @@ class GetScore(APIView):
             for answer in answers:
                 text=answer['text']
                 question=Quiz.objects.get(text=text)
-                user_choice = question.choices.get(label=answer['choices']['label'])
+                user_choice = question.choices.get(label=answer['label'])
                 if (user_choice.is_correct):
                     score+=1
                 reponse_data['answers'].append(

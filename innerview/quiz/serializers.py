@@ -42,7 +42,6 @@ class QuizSerializer(serializers.ModelSerializer):
         model=Quiz 
         fields = ['text', 'answer_reason', 'choices','field','topic','level']
     def create(self,validated_data):
-        print(validated_data)
         choices_data = validated_data.pop("choices")
 
         quiz_question=Quiz.objects.create(**validated_data)
@@ -52,6 +51,6 @@ class QuizSerializer(serializers.ModelSerializer):
         
         return quiz_question
 class ReceivedAnswerSerializer(serializers.Serializer):
-    choices = ChoiceSerializer()
-    #text = serializers.CharField(read_only=True)
     text = serializers.CharField()
+    label = serializers.CharField()
+
