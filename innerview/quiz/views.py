@@ -109,8 +109,11 @@ class GetScore(APIView):
             reponse_data['answers']=[]
             for answer in answers:
                 text=answer['text']
-                question=Quiz.objects.get(text=text)
-                user_choice = question.choices.get(label=answer['label'])
+                try :
+                    question=Quiz.objects.get(text=text)
+                    user_choice = question.choices.get(label=answer['label'])
+                except (Quiz.DoesNotExist) as e:
+                    raise ValidationError({'error': "Some Questions Do Not exist on the DB, are you sure these questions from our application?"})
                 if (user_choice.is_correct):
                     score+=1
                 reponse_data['answers'].append(
