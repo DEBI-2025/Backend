@@ -7,6 +7,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework import status
 from .geminiAPI import geminiAPI,quizGeminiAPI
+from rest_framework.permissions import AllowAny
 import json
 # List all available fields
 class FieldListView(generics.ListAPIView):
@@ -67,7 +68,7 @@ class QuizListView(generics.ListAPIView):
 # Fetch questions based on selected field, level, and topic
 class QuestionListView(generics.ListAPIView):
     serializer_class = QuestionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         
