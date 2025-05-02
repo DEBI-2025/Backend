@@ -7,19 +7,19 @@ import json
 def geminiAPI(api_key,field,level,topic):
     prompt = f"""You are an expert Question Bank generator for software engineering practice. Your task is to generate 10 multiple-choice questions (MCQs) in JSON format, tailored to the user's specifications.
 
-                    **User Specifications:**
+                    User Specifications:
 
-                    * **Field:** {field}
-                    * **Topics:** {topic}
-                    * **Question Level:** {level}
+                     Field: {field}
+                     Topics: {topic}
+                     Question Level: {level}
 
-                    **Instructions:**
+                    Instructions:
 
-                    1.  **Generate 30 Written Question** based on the provided field, track, topics, and question level.
-                    2.  **Ensure all questions are relevant** to the specified topics within the given track and field.
-                    3.  **The question level should accurately reflect the difficulty** (entry, intermediate, or advanced).
-                    4.  **Each question should have a written answer 
-                    5.  **Return the questions in a JSON** with the following structure:
+                    1.  Generate 30 Written Question based on the provided field, track, topics, and question level.
+                    2.  Ensure all questions are relevant to the specified topics within the given track and field.
+                    3.  The question level should accurately reflect the difficulty (entry, intermediate, or advanced).
+                    4.  Each question should have a written answer 
+                    5.  Return the questions in a JSON with the following structure:
                     {{
                     "questions": [
                         {{
@@ -62,19 +62,19 @@ def geminiAPI(api_key,field,level,topic):
 def quizGeminiAPI(api_key,field,level,topic):
     prompt = f"""You are an expert Question Bank generator for software engineering practice. Your task is to generate 30 multiple-choice questions (MCQs) in JSON format, tailored to the user's specifications.
 
-                    **User Specifications:**
+                    User Specifications:
 
-                    * **Field:** {field}
-                    * **Topics:** {topic}
-                    * **Question Level:** {level}
+                     Field: {field}
+                     Topics: {topic}
+                     Question Level: {level}
 
-                    **Instructions:**
+                    Instructions:
 
-                    1.  **Generate 30 MCQ Question** based on the provided field, track, topics, and question level.
-                    2.  **Ensure all questions are relevant** to the specified topics within the given track and field.
-                    3.  **The question level should accurately reflect the difficulty** (entry, intermediate, or advanced).
-                    4.  **Each question should have choices A,B,C, and D  with  only one correct answer 
-                    5.  **Return the questions in a JSON** with the following structure:
+                    1.  Generate 30 MCQ Question based on the provided field, track, topics, and question level.
+                    2.  Ensure all questions are relevant to the specified topics within the given track and field.
+                    3.  The question level should accurately reflect the difficulty (entry, intermediate, or advanced).
+                    4.  Each question should have choices A,B,C, and D  with  only one correct answer 
+                    5.  Return the questions in a JSON with the following structure:
                     {{
                     "questions": [
                         {{

@@ -71,7 +71,7 @@ class QuestionListView(generics.ListAPIView):
 
     def get_queryset(self):
         
-        required_params  = ['field', 'topic', 'level']
+        required_params  = ['field', 'topics', 'level']
         missing = [param for param in required_params if not self.request.GET.get(param)]
         if missing:
             raise ValidationError({'error': f"Missing query parameters: {', '.join(missing)}"})
@@ -79,7 +79,7 @@ class QuestionListView(generics.ListAPIView):
         try :
             field=Field.objects.get(name=self.request.GET.get('field'))
             level=Level.objects.get(name=self.request.GET.get('level'))   
-            topic=Topic.objects.get(name=self.request.GET.get('topic'))
+            topic=Topic.objects.get(name=self.request.GET.get('topics'))
 
         except (Field.DoesNotExist, Level.DoesNotExist, Topic.DoesNotExist) as e:
             raise ValidationError({'error': str(e)})
