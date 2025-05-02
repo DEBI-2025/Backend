@@ -27,9 +27,10 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ChoiceSerializer(serializers.ModelSerializer):
+    is_correct = serializers.CharField(write_only=True)
     class Meta:
         model=Choice
-        fields = ['label', 'choice_text']
+        fields = ['label', 'choice_text',"is_correct"]
 
 class QuizSerializer(serializers.ModelSerializer):
     choices = ChoiceSerializer(many=True)

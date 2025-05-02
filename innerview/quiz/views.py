@@ -59,7 +59,6 @@ class QuizListView(generics.ListAPIView):
                 newQ['field']=field.pk
                 newQ['level']=level.pk
                 serializer = QuizSerializer(data=newQ)
-                print(newQ)
                 if serializer.is_valid():
                     serializer.save() 
             queryset = Quiz.objects.filter(field_id=field.pk,topic_id=topic.pk,level_id=level.pk)
@@ -76,10 +75,14 @@ class QuestionListView(generics.ListAPIView):
         missing = [param for param in required_params if not self.request.GET.get(param)]
         if missing:
             raise ValidationError({'error': f"Missing query parameters: {', '.join(missing)}"})
-        
-        field=Field.objects.get(name=self.request.GET.get('field'))
-        level=Level.objects.get(name=self.request.GET.get('level'))   
-        topic=Topic.objects.get(name=self.request.GET.get('topic'))
+
+        try :
+            field=Field.objects.get(name=self.request.GET.get('field'))
+            level=Level.objects.get(name=self.request.GET.get('level'))   
+            topic=Topic.objects.get(name=self.request.GET.get('topic'))
+
+        except (Field.DoesNotExist, Level.DoesNotExist, Topic.DoesNotExist) as e:
+            raise ValidationError({'error': str(e)})
      
         queryset = Question.objects.filter(field__id=field.pk,topic__id=topic.pk,level__id=level.pk)
         if (queryset.count() ==0):
