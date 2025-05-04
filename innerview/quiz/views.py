@@ -31,6 +31,12 @@ class TopicListView(generics.ListAPIView):
         if field_id:
             return Topic.objects.filter(field_id=field_id)
         return Topic.objects.all()
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer= self.get_serializer(queryset,many=True)
+        if len(serializer.data) == 0:
+            return Response({"details":"No Topics found with this field_id"},status.HTTP_404_NOT_FOUND)    
+        return Response(serializer.data)
 
 class QuizListView(generics.ListAPIView):
     serializer_class=QuizSerializer
