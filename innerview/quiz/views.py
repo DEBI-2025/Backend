@@ -34,7 +34,7 @@ class TopicListView(generics.ListAPIView):
 
 class QuizListView(generics.ListAPIView):
     serializer_class=QuizSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         required_params  = ['field', 'topic', 'level']
@@ -67,7 +67,7 @@ class QuizListView(generics.ListAPIView):
 # Fetch questions based on selected field, level, and topic
 class QuestionListView(generics.ListAPIView):
     serializer_class = QuestionSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         

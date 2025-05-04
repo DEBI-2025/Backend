@@ -161,8 +161,8 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_RETYPE' :True,
     'PASSWORD_RESET_CONFIRM_URL' : 'password/reset/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL' : 'email/reset/{uid}/{token}',
-    'ACTIVATION_URL' : 'activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL' : True,
+    # 'ACTIVATION_URL' : 'activate/{uid}/{token}',
+    # 'SEND_ACTIVATION_EMAIL' : True,
     'SERIALIZERS' : {
         'user_create' : 'accounts.serializers.UserCreateSerializer',
         'user' : 'accounts.serializers.UserCreateSerializer',
@@ -185,8 +185,8 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": True,
+    #"ROTATE_REFRESH_TOKENS": True,
+    # "BLACKLIST_AFTER_ROTATION": True,
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
