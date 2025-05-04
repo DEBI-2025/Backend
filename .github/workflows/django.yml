@@ -23,4 +23,5 @@ jobs:
         pipenv install
     - name: Run Tests
       run: |
+        cd innerview
         python manage.py test
