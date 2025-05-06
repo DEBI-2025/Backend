@@ -41,3 +41,6 @@ jobs:
       with:
         push: true
         tags: innerview-backend:latest
+      env:
+        super_user_pass: ${{vars.SUPER_USER_EMAIL}}
+        super_user_email: ${{secrets.SUPER_USER_PASS}}
