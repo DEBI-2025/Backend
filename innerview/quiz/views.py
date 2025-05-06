@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .geminiAPI import geminiAPI,quizGeminiAPI
 from rest_framework.permissions import AllowAny
+from django.http import Http404
 import json
 # List all available fields
 class FieldListView(generics.ListAPIView):
@@ -53,7 +54,7 @@ class QuizListView(generics.ListAPIView):
             topic=Topic.objects.get(name=self.request.GET.get('topic'))
 
         except (Field.DoesNotExist, Level.DoesNotExist, Topic.DoesNotExist) as e:
-            raise ValidationError({'error': str(e)})
+            raise Http404({'error': str(e)})
         
         queryset = Quiz.objects.filter(field__id=field.pk,topic__id=topic.pk,level__id=level.pk)
         if not queryset.exists():
@@ -88,7 +89,7 @@ class QuestionListView(generics.ListAPIView):
             topic=Topic.objects.get(name=self.request.GET.get('topics'))
 
         except (Field.DoesNotExist, Level.DoesNotExist, Topic.DoesNotExist) as e:
-            raise ValidationError({'error': str(e)})
+            raise Http404({'error': str(e)})
      
         queryset = Question.objects.filter(field__id=field.pk,topic__id=topic.pk,level__id=level.pk)
         if (queryset.count() ==0):
