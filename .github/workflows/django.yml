@@ -38,11 +38,15 @@ jobs:
     - name : add .env file
       run : |
         touch innerview/.env 
-        echo "super_user_pass=${super_user_pass}" >>  innerview/.env 
-        echo "super_user_email=${super_user_email}" >>  innerview/.env 
+        echo super_user_pass="${super_user_pass}" >>  innerview/.env 
+        echo "super_user_email="${super_user_email}" >>  innerview/.env 
       env:
         super_user_email: ${{vars.SUPER_USER_EMAIL}} 
         super_user_pass: ${{secrets.SUPER_USER_PASS}}
+
+    - name: cat .env file
+      run : |
+        cat innerview/.env 
 
     - name: Build and push
       uses: docker/build-push-action@v6
@@ -53,6 +57,4 @@ jobs:
         super_user_email: ${{vars.SUPER_USER_EMAIL}} 
         super_user_pass: ${{secrets.SUPER_USER_PASS}}
   
-    - name: add .env file
-      run : |
-        cat innerview/.env 
+
