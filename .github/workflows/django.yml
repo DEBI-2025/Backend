@@ -35,12 +35,18 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    - name : add .env file
+      run : |
+        touch innerview/.env 
+        echo "super_user_pass=${super_user_pass}" >>  innerview/.env 
+        echo "super_user_email=${super_user_email}" >>  innerview/.env 
+      env:
+        super_user_pass: ${{vars.SUPER_USER_EMAIL}}
+        super_user_email: ${{secrets.SUPER_USER_PASS}}
 
     - name: Build and push
       uses: docker/build-push-action@v6
       with:
         push: true
         tags: innerview-backend:latest
-      env:
-        super_user_pass: ${{vars.SUPER_USER_EMAIL}}
-        super_user_email: ${{secrets.SUPER_USER_PASS}}
+      
