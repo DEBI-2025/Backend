@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from dotenv import load_dotenv
 load_dotenv(dotenv_path='../../../.env')
 
-load_dotenv()
+# load_dotenv()
 
 class Command(BaseCommand):
     help = 'Create a superuser with additional fields if it doesn’t exist'
