@@ -3,8 +3,6 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 
 from dotenv import load_dotenv
-load_dotenv(dotenv_path='../../../.env')
-
 load_dotenv()
 
 class Command(BaseCommand):
