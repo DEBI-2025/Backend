@@ -13,7 +13,7 @@ import json
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(dotenv_path=".env")
 api_key=os.getenv("api_key")
 # List all available fields
 class FieldListView(generics.ListAPIView):
