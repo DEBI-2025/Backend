@@ -10,6 +10,11 @@ from .geminiAPI import geminiAPI,quizGeminiAPI
 from rest_framework.permissions import AllowAny
 from django.http import Http404
 import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv(dotenv_path="../.env")
+api_key=os.getenv("api_key")
 # List all available fields
 class FieldListView(generics.ListAPIView):
     queryset = Field.objects.all()
@@ -58,7 +63,7 @@ class QuizListView(generics.ListAPIView):
         
         queryset = Quiz.objects.filter(field__id=field.pk,topic__id=topic.pk,level__id=level.pk)
         if not queryset.exists():
-            api_key="AIzaSyDbgILxNKc0RZjgER7LK-SpKVU4X7HFkyI"
+            # api_key="AIzaSyDbgILxNKc0RZjgER7LK-SpKVU4X7HFkyI"
 
             newQs=quizGeminiAPI(api_key,field.name,level.name,topic.name)['questions']
             for newQ in newQs:
@@ -93,7 +98,7 @@ class QuestionListView(generics.ListAPIView):
      
         queryset = Question.objects.filter(field__id=field.pk,topic__id=topic.pk,level__id=level.pk)
         if (queryset.count() ==0):
-            api_key="AIzaSyDbgILxNKc0RZjgER7LK-SpKVU4X7HFkyI"
+            # api_key="AIzaSyDbgILxNKc0RZjgER7LK-SpKVU4X7HFkyI"
 
             newQs=geminiAPI(api_key,field.name,level.name,topic.name)['questions']
             for newQ in newQs:
