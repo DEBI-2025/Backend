@@ -107,7 +107,7 @@ class LevelsTestCase(APITestCase):
         response=self.client.get(path=self.levels_url)
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertEqual(len(response.data),3)
-        print(response.data)
+
         for i in range(3):
             self.assertEqual(self.level_names[i],response.data[i]['name'])
 
@@ -119,6 +119,22 @@ class LevelsTestCase(APITestCase):
     
 class QuestionsTestCase(APITestCase):
     def setUp(self):
+        # Create some Fields and Topics values in the database for Unit Testing
+        self.field_topic_list=[{"Software Engineering":['DevOps','Front End','Back End']},
+        {"Cyber Security":['Security Analyst','Security Engineer','Penetration Tester']},
+        {"Data Science":['Data Scientist','Machine Learning Engineer','Data Engineer']}]
+
+        for field_topic in self.field_topic_list:
+            field_name=list(field_topic.keys())[0]
+            field=Field.objects.create(name=field_name)
+            for topic in list(field_topic.values())[0]:
+                Topic.objects.create(name=topic,field=field) 
+
+        # Create some Levels values in the database for Unit Testing
+        self.level_names=['entry','intermidiate','advanced']
+        for level_name in self.level_names: 
+            Level.objects.create(name=level_name)
+                
         self.user = UserAccount.objects.create(email="hamdy@gmail.com",first_name="Abdelrhman",last_name="Hamdy",date_of_birth="1997-2-1",phone="01551343021",password=make_password("Hello@523"))
         self.login_url="/auth/jwt/create"
         self.questions_url="/api/questions/"
@@ -128,5 +144,132 @@ class QuestionsTestCase(APITestCase):
         }
         response=self.client.post(path=self.login_url,data=data,format='json')
         self.client.credentials(HTTP_AUTHORIZATION=f'JWT {response.data['access']}')
+
+    def test_get_questions_without_authentication(self):
+        self.client.credentials()
+        data={
+            'field':'Software Engineering',
+            'topic': 'DevOps',
+            'level':'intermidiate'
+        }
+        response=self.client.get(path=self.questions_url,data=data)
+
+        self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_questions_with_authentication(self):
+        data={
+            'field':'Software Engineering',
+            'topics': 'DevOps',
+            'level':'intermidiate'
+        }
+        response=self.client.get(path=self.questions_url,data=data)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertGreater(Question.objects.count(),25)
+    
+    def test_get_questions_without_query_parameters(self):
+
+        response=self.client.get(path=self.questions_url)
+        self.assertEqual(response.status_code,status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Question.objects.count(),0)
+
+    def test_get_questions_with_wrong_values_query_parameters(self):
+        data={
+            'field':'Software',
+            'topics': 'DevOps',
+            'level':'intermidiate'
+        }
+        response=self.client.get(path=self.questions_url,data=data)
+        self.assertEqual(response.status_code,status.HTTP_404_NOT_FOUND)
+        self.assertEqual(Question.objects.count(),0)
+
+    def test_get_questions_with_wrong_query_parameters(self):
+        data={
+            'field':'Software',
+            'bteee5': 'DevOps',
+            'level':'intermidiate'
+        }
+        response=self.client.get(path=self.questions_url,data=data)
+        self.assertEqual(response.status_code,status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Question.objects.count(),0)
+
+
+
+
+
+
+class QuizTestCase(APITestCase):
+    def setUp(self):
+        # Create some Fields and Topics values in the database for Unit Testing
+        self.field_topic_list=[{"Software Engineering":['DevOps','Front End','Back End']},
+        {"Cyber Security":['Security Analyst','Security Engineer','Penetration Tester']},
+        {"Data Science":['Data Scientist','Machine Learning Engineer','Data Engineer']}]
+
+        for field_topic in self.field_topic_list:
+            field_name=list(field_topic.keys())[0]
+            field=Field.objects.create(name=field_name)
+            for topic in list(field_topic.values())[0]:
+                Topic.objects.create(name=topic,field=field) 
+
+        # Create some Levels values in the database for Unit Testing
+        self.level_names=['entry','intermidiate','advanced']
+        for level_name in self.level_names: 
+            Level.objects.create(name=level_name)
+                
+        self.user = UserAccount.objects.create(email="hamdy@gmail.com",first_name="Abdelrhman",last_name="Hamdy",date_of_birth="1997-2-1",phone="01551343021",password=make_password("Hello@523"))
+        self.login_url="/auth/jwt/create"
+        self.quiz_url="/api/quiz/"
+        data={
+            'email':"hamdy@gmail.com",
+            'password':"Hello@523"
+        }
+        response=self.client.post(path=self.login_url,data=data,format='json')
+        self.client.credentials(HTTP_AUTHORIZATION=f'JWT {response.data['access']}')
+
+    def test_get_quiz_without_authentication(self):
+        self.client.credentials()
+        data={
+            'field':'Software Engineering',
+            'topic': 'DevOps',
+            'level':'intermidiate'
+        }
+        response=self.client.get(path=self.quiz_url,data=data)
+
+        self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_quiz_with_authentication(self):
+        data={
+            'field':'Software Engineering',
+            'topic': 'DevOps',
+            'level':'intermidiate'
+        }
+        response=self.client.get(path=self.quiz_url,data=data)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertGreater(Quiz.objects.count(),25)
+    
+    def test_get_quiz_without_query_parameters(self):
+
+        response=self.client.get(path=self.quiz_url)
+        self.assertEqual(response.status_code,status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Quiz.objects.count(),0)
+
+    def test_get_quiz_with_wrong_values_query_parameters(self):
+        data={
+            'field':'Software',
+            'topic': 'DevOps',
+            'level':'intermidiate'
+        }
+        response=self.client.get(path=self.quiz_url,data=data)
+        self.assertEqual(response.status_code,status.HTTP_404_NOT_FOUND)
+        self.assertEqual(Quiz.objects.count(),0)
+
+    def test_get_quiz_with_wrong_query_parameters(self):
+        data={
+            'field':'Software',
+            'bteee5': 'DevOps',
+            'level':'intermidiate'
+        }
+        response=self.client.get(path=self.quiz_url,data=data)
+        self.assertEqual(response.status_code,status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Quiz.objects.count(),0)
 
 
