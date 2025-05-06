@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 #load_dotenv(dotenv_path='../../../.env')
 
 load_dotenv()
-print(Dataaaaaaaaaa, os.getenv("super_user_email" ))
-print(Passwordddddddd, os.getenv("super_user_pass" ))
+print("Dataaaaaaaaaa", os.getenv("super_user_email" ))
+print("Passwordddddddd", os.getenv("super_user_pass" ))
 class Command(BaseCommand):
     help = 'Create a superuser with additional fields if it doesn’t exist'
 
