@@ -41,8 +41,8 @@ jobs:
         echo "super_user_pass=${super_user_pass}" >>  innerview/.env 
         echo "super_user_email=${super_user_email}" >>  innerview/.env 
       env:
-        super_user_pass: ${{vars.SUPER_USER_EMAIL}}
-        super_user_email: ${{secrets.SUPER_USER_PASS}}
+        super_user_email: ${{vars.SUPER_USER_EMAIL}} 
+        super_user_pass: ${{secrets.SUPER_USER_PASS}}
 
     - name: Build and push
       uses: docker/build-push-action@v6
