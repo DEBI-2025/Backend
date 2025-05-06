@@ -3,14 +3,7 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 
 from dotenv import load_dotenv
-load_dotenv(dotenv_path="../../../.env")
-print("Dataaaaaaaaaa", os.getenv("super_user_email" ))
-print("Passwordddddddd", os.getenv("super_user_pass" ))
-
-load_dotenv(dotenv_path="../../.env")
-print("Dataaaaaaaaaa", os.getenv("super_user_email" ))
-print("Passwordddddddd", os.getenv("super_user_pass" ))
-# load_dotenv()
+load_dotenv()
 
 class Command(BaseCommand):
     help = 'Create a superuser with additional fields if it doesn’t exist'
