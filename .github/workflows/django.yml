@@ -53,8 +53,8 @@ jobs:
       with:
         push: true
         tags: innerview-backend:latest
-      env:
-        super_user_email: ${{vars.SUPER_USER_EMAIL}} 
-        super_user_pass: ${{secrets.SUPER_USER_PASS}}
+        build-args: |
+          super_user_email=${{vars.SUPER_USER_EMAIL}} 
+          super_user_pass=${{secrets.SUPER_USER_PASS}}
   
 
