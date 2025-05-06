@@ -28,4 +28,4 @@ jobs:
         cd innerview
         python manage.py test
       env:
-          api_key: ${{API_KEY}}
+        api_key: ${{secrets.API_KEY}}
