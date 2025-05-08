@@ -17,7 +17,7 @@ ARG super_user_pass
 # ENV super_user_pass=$super_user_pass
 
 RUN python innerview/manage.py makemigrations && python innerview/manage.py migrate
-RUN python innerview/manage.py create_superuser
+# RUN python innerview/manage.py create_superuser
 
 EXPOSE 80
 CMD [ "python","innerview/manage.py" , "runserver" , "0.0.0.0:80" ]
