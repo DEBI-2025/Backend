@@ -29,3 +29,19 @@ class Question(models.Model):
 
     def __str__(self):
         return self.text
+
+class Quiz(models.Model):
+    text = models.TextField(unique=True)
+    answer_reason = models.TextField()
+    field = models.ForeignKey(Field, on_delete=models.CASCADE, related_name="quiz")
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="quiz")
+    level = models.ForeignKey(Level, on_delete=models.CASCADE, related_name="quiz")
+
+    def __str__(self):
+        return self.text
+
+class Choice(models.Model):
+    quiz_question=models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="choices")
+    label=models.CharField(max_length=1)
+    choice_text = models.TextField()
+    is_correct = models.BooleanField(default=False)
