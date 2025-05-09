@@ -110,7 +110,11 @@ def quizGeminiAPI(api_key,field,level,topic):
         #    system_instruction=sys_instruct),
         contents=[prompt]
     )
-    
-    return  json.loads(response.text.replace("json","").replace("`",""))
+    try:
+        return  json.loads(response.text.replace("json","").replace("`",""))
+    except json.JSONDecodeError as e:
+        print("Error decoding JSON:", e)
+        print("Response text:", response.text)
+        return response.text
 
     

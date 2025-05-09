@@ -12,6 +12,7 @@ django-cors-headers = "*"
 google-genai = "*"
 djangorestframework = "*"
 python-dotenv = "*"
+mysqlclient = "*"
 
 [dev-packages]
 
