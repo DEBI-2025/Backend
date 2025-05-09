@@ -29,15 +29,11 @@ def clean_and_parse_gemini_json(response_text):
 
 def geminiAPI(api_key,field,level,topic):
     prompt = f"""You are an expert Question Bank generator for software engineering practice. Your task is to generate 10 multiple-choice questions (MCQs) in JSON format, tailored to the user's specifications.
-
                     User Specifications:
-
                      Field: {field}
                      Topics: {topic}
                      Question Level: {level}
-
                     Instructions:
-
                     1.  Generate 30 Written Question based on the provided field, track, topics, and question level.
                     2.  Ensure all questions are relevant to the specified topics within the given track and field.
                     3.  The question level should accurately reflect the difficulty (entry, intermediate, or advanced).
@@ -71,7 +67,7 @@ def geminiAPI(api_key,field,level,topic):
         #    system_instruction=sys_instruct),
         contents=[prompt]
     )
-    return  json.loads(response.text.replace("json","").replace("`",""))
+    return  clean_and_parse_gemini_json(response.text)
 
 
 # questions= geminiAPI("AIzaSyDbgILxNKc0RZjgER7LK-SpKVU4X7HFkyI","Software Egnieering","DevOps","Intermedaite")['questions']
@@ -84,15 +80,11 @@ def geminiAPI(api_key,field,level,topic):
 
 def quizGeminiAPI(api_key,field,level,topic):
     prompt = f"""You are an expert Question Bank generator for software engineering practice. Your task is to generate 30 multiple-choice questions (MCQs) in JSON format, tailored to the user's specifications.
-
                     User Specifications:
-
                      Field: {field}
                      Topics: {topic}
                      Question Level: {level}
-
                     Instructions:
-
                     1.  Generate 30 MCQ Question based on the provided field, track, topics, and question level.
                     2.  Ensure all questions are relevant to the specified topics within the given track and field.
                     3.  The question level should accurately reflect the difficulty (entry, intermediate, or advanced).
@@ -173,5 +165,3 @@ def HrQuestionsGeminiAPI(api_key):
     )
     return clean_and_parse_gemini_json(response.text)
     #return  json.loads(response.text.replace("json","").replace("`",""))
-
-    

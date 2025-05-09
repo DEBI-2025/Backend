@@ -63,10 +63,10 @@ class QuizListView(generics.ListAPIView):
         
         queryset = Quiz.objects.filter(field__id=field.pk,topic__id=topic.pk,level__id=level.pk)
         if not queryset.exists():
-
-
-            newQs=quizGeminiAPI(api_key,field.name,level.name,topic.name)['questions']
-            for newQ in newQs:
+            newQs=None    
+            while newQs is None :
+                newQs=quizGeminiAPI(api_key,field.name,level.name,topic.name)
+            for newQ in newQs['questions']:
                 newQ['topic']=topic.pk
                 newQ['field']=field.pk
                 newQ['level']=level.pk
@@ -99,9 +99,10 @@ class QuestionListView(generics.ListAPIView):
         queryset = Question.objects.filter(field__id=field.pk,topic__id=topic.pk,level__id=level.pk)
         if (queryset.count() ==0):
             # api_key="AIzaSyDbgILxNKc0RZjgER7LK-SpKVU4X7HFkyI"
-
-            newQs=geminiAPI(api_key,field.name,level.name,topic.name)['questions']
-            for newQ in newQs:
+            newQs=None    
+            while newQs is None :
+                newQs=geminiAPI(api_key,field.name,level.name,topic.name)
+            for newQ in newQs['questions']:
                 Question.objects.create(text=newQ['text'],answer=newQ['answer'],field=field,topic=topic,level=level)  
             queryset = Question.objects.filter(field_id=field.pk,topic_id=topic.pk,level_id=level.pk)
         

@@ -20,7 +20,7 @@ class Topic(models.Model):
         return self.name
 
 class Question(models.Model):
-    text = models.CharField(max_length=255)
+    text = models.TextField()
     answer = models.TextField()
     field = models.ForeignKey(Field, on_delete=models.CASCADE, related_name="questions")
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="questions")
