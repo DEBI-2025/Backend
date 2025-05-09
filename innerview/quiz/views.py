@@ -63,7 +63,7 @@ class QuizListView(generics.ListAPIView):
         
         queryset = Quiz.objects.filter(field__id=field.pk,topic__id=topic.pk,level__id=level.pk)
         if not queryset.exists():
-            # api_key="AIzaSyDbgILxNKc0RZjgER7LK-SpKVU4X7HFkyI"
+
 
             newQs=quizGeminiAPI(api_key,field.name,level.name,topic.name)['questions']
             for newQ in newQs:

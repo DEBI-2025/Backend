@@ -2,9 +2,13 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import QuestionViewSet
 
-router = DefaultRouter()
-router.register(r'hr/questions', QuestionViewSet)
+# router = DefaultRouter()
+# router.register(r'hr/questions', QuestionViewSet)
+
+# urlpatterns = [
+#     path('', include(router.urls)),
+# ]
 
 urlpatterns = [
-    path('', include(router.urls)),
+     path('hr/questions/', QuestionViewSet.as_view(), name='hr-question-list'),
 ]
