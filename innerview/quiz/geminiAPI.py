@@ -135,7 +135,7 @@ def quizGeminiAPI(api_key,field,level,topic):
     )
     
     #return  json.loads(response.text.replace("json","").replace("`",""))
-    clean_and_parse_gemini_json(response.text)
+    return clean_and_parse_gemini_json(response.text)
 
 def HrQuestionsGeminiAPI(api_key):
     prompt = f"""Generate a list of 10 HR interview questions for Technical Engineers in (Software Engineering / Cyber secruity / Data science , etc..) to practice.
