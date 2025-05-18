@@ -8,4 +8,6 @@ urlpatterns = [
     path('questions/', QuestionListView.as_view(), name='questions'),
     path('quiz/', QuizListView.as_view(), name='quiz'),
     path('getscore/', GetScore.as_view(), name='getscore'),
+    path('quizzesResults/', UserQuizzesResultsDetailView.as_view(), name='quizzesResults'), 
 ]
+

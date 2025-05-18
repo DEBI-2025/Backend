@@ -1,4 +1,7 @@
 from django.db import models
+import sys
+sys.path.append('../accounts')
+from accounts.models import UserAccount
 
 class Field(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -45,3 +48,10 @@ class Choice(models.Model):
     label=models.CharField(max_length=1)
     choice_text = models.TextField()
     is_correct = models.BooleanField(default=False)
+
+class UserQuizzesResults(models.Model):
+    user=models.ForeignKey(UserAccount , on_delete=models.CASCADE, related_name="quizzesResults")
+    takenQuizzes= models.IntegerField(default=0)
+    passedQuizzes= models.IntegerField(default=0)
+    highestGrade = models.FloatField(default=0)
+    successRate = models.FloatField(default=0)
