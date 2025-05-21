@@ -7,9 +7,33 @@ services:
       args:
         super_user_email: "innerview@gmail.com"
         super_user_pass: "admin"
-        command: /bin/sh -c "python innerview/manage.py create_superuser && python innerview/manage.py runserver 0.0.0.0:00"
-
+#        command: /bin/sh -c "sleep 10 && echo 'Done sleeping!' && python innerview/manage.py makemigrations && python innerview/manage.py migrate && python innerview/manage.py create_superuser && python innerview/manage.py runserver 0.0.0.0:80"
+        command: /app/start.sh
     ports:
     - "8000:80"
     environment:
       - api_key=AIzaSyDbgILxNKc0RZjgER7LK-SpKVU4X7HFkyI
+      - DB_NAME=innerview
+      - DB_USERNAME=innerview
+      - DB_PASSWORD=root1234
+      - DB_PORT=3306
+      - DB_hostname=mysql
+    depends_on:
+      - mysql
+  
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root1234
+      - MYSQL_DATABASE=innerview
+      - MYSQL_USER=innerview
+      - MYSQL_PASSWORD=root1234
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+
+    
