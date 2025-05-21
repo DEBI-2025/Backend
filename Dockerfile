@@ -2,7 +2,7 @@ FROM python:3.13-slim
 
 WORKDIR /app
 
-RUN apt-get update && pip install --upgrade pip && pip install pipenv && apt-get install  build-essential pkg-config libmariadb-dev  -y
+RUN apt-get update && pip install --upgrade pip && pip install pipenv && apt-get install  netcat-openbsd  build-essential pkg-config libmariadb-dev  -y
 
 COPY  Pipfile Pipfile.lock ./
 
