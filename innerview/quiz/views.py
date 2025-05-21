@@ -1,8 +1,8 @@
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from .models import Field, Level, Topic, Question,Quiz,Choice
-from .serializers import FieldSerializer, LevelSerializer, TopicSerializer, QuestionSerializer,QuizSerializer,ChoiceSerializer,ReceivedAnswerSerializer
+from .models import Field, Level, Topic, Question,Quiz,Choice,UserQuizzesResults
+from .serializers import FieldSerializer, LevelSerializer, TopicSerializer, QuestionSerializer,QuizSerializer,ChoiceSerializer,ReceivedAnswerSerializer,UserQuizzesResultsSerializer
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,6 +12,7 @@ from django.http import Http404
 import json
 import os
 from dotenv import load_dotenv
+from django.shortcuts import get_object_or_404
 
 load_dotenv()
 api_key=os.getenv("api_key")
@@ -120,7 +121,7 @@ class QuestionListView(generics.ListAPIView):
         return queryset
 
 class GetScore(APIView):
-
+    permission_classes = [IsAuthenticated]
     def post(self,request):
         serializer = ReceivedAnswerSerializer(data=request.data ,many=True)
         if serializer.is_valid():
@@ -149,7 +150,29 @@ class GetScore(APIView):
                     }
             )
             pct=(score/QuestionsNum)*100
-            reponse_data['result'] = "Pased" if  pct > 60 else "Failed"
+            reponse_data['result'] = "Passed" if  pct > 60 else "Failed"
             reponse_data['Score']= str(pct) + "%"
+
+            result,_=UserQuizzesResults.objects.get_or_create(user=request.user)   
+            
+            result.takenQuizzes+=1
+
+            if  pct > 60:
+                result.passedQuizzes+=1
+
+            if result.highestGrade < pct:
+                result.highestGrade = pct
+
+            result.successRate=(result.passedQuizzes/result.takenQuizzes)*100
+            result.save()
+              
+
             return Response(reponse_data,status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+class UserQuizzesResultsDetailView(generics.ListAPIView):
+    permission_classes=[IsAuthenticated]
+    serializer_class=UserQuizzesResultsSerializer
+    def get_queryset(self):
+        results=UserQuizzesResults.objects.filter(user=self.request.user)
+        return results
