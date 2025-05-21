@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Field, Level, Topic, Question,Choice,Quiz
+from .models import Field, Level, Topic, Question,Choice,Quiz,UserQuizzesResults
 
 class FieldSerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,3 +54,7 @@ class ReceivedAnswerSerializer(serializers.Serializer):
     text = serializers.CharField()
     label = serializers.CharField()
 
+class UserQuizzesResultsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserQuizzesResults
+        fields = ["takenQuizzes","passedQuizzes","highestGrade","successRate"]

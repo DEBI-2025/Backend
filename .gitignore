@@ -22,7 +22,7 @@ staticfiles/
 static/
 
 # Environment variables & secrets
-**/.env
+# **/.env
 *.secret
 
 # Logs and debug files

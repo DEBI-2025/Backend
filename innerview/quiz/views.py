@@ -1,8 +1,8 @@
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from .models import Field, Level, Topic, Question,Quiz,Choice
-from .serializers import FieldSerializer, LevelSerializer, TopicSerializer, QuestionSerializer,QuizSerializer,ChoiceSerializer,ReceivedAnswerSerializer
+from .models import Field, Level, Topic, Question,Quiz,Choice,UserQuizzesResults
+from .serializers import FieldSerializer, LevelSerializer, TopicSerializer, QuestionSerializer,QuizSerializer,ChoiceSerializer,ReceivedAnswerSerializer,UserQuizzesResultsSerializer
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,6 +12,7 @@ from django.http import Http404
 import json
 import os
 from dotenv import load_dotenv
+from django.shortcuts import get_object_or_404
 
 load_dotenv()
 api_key=os.getenv("api_key")
@@ -64,8 +65,9 @@ class QuizListView(generics.ListAPIView):
         queryset = Quiz.objects.filter(field__id=field.pk,topic__id=topic.pk,level__id=level.pk)
         if not queryset.exists():
 
-
-            newQs=quizGeminiAPI(api_key,field.name,level.name,topic.name)['questions']
+            newQs=None
+            while newQs==None:
+                newQs=quizGeminiAPI(api_key,field.name,level.name,topic.name)['questions']
             for newQ in newQs:
                 newQ['topic']=topic.pk
                 newQ['field']=field.pk
@@ -99,8 +101,9 @@ class QuestionListView(generics.ListAPIView):
         queryset = Question.objects.filter(field__id=field.pk,topic__id=topic.pk,level__id=level.pk)
         if (queryset.count() ==0):
             # api_key="AIzaSyDbgILxNKc0RZjgER7LK-SpKVU4X7HFkyI"
-
-            newQs=geminiAPI(api_key,field.name,level.name,topic.name)['questions']
+            newQs=None
+            while newQs==None:
+                newQs=geminiAPI(api_key,field.name,level.name,topic.name)['questions']
             for newQ in newQs:
                 Question.objects.create(text=newQ['text'],answer=newQ['answer'],field=field,topic=topic,level=level)  
             queryset = Question.objects.filter(field_id=field.pk,topic_id=topic.pk,level_id=level.pk)
@@ -109,7 +112,7 @@ class QuestionListView(generics.ListAPIView):
         return queryset
 
 class GetScore(APIView):
-
+    permission_classes = [IsAuthenticated]
     def post(self,request):
         serializer = ReceivedAnswerSerializer(data=request.data ,many=True)
         if serializer.is_valid():
@@ -138,7 +141,29 @@ class GetScore(APIView):
                     }
             )
             pct=(score/QuestionsNum)*100
-            reponse_data['result'] = "Pased" if  pct > 60 else "Failed"
+            reponse_data['result'] = "Passed" if  pct > 60 else "Failed"
             reponse_data['Score']= str(pct) + "%"
+
+            result,_=UserQuizzesResults.objects.get_or_create(user=request.user)   
+            
+            result.takenQuizzes+=1
+
+            if  pct > 60:
+                result.passedQuizzes+=1
+
+            if result.highestGrade < pct:
+                result.highestGrade = pct
+
+            result.successRate=(result.passedQuizzes/result.takenQuizzes)*100
+            result.save()
+              
+
             return Response(reponse_data,status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+class UserQuizzesResultsDetailView(generics.ListAPIView):
+    permission_classes=[IsAuthenticated]
+    serializer_class=UserQuizzesResultsSerializer
+    def get_queryset(self):
+        results=UserQuizzesResults.objects.filter(user=self.request.user)
+        return results
